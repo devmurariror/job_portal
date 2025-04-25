@@ -1,44 +1,47 @@
-import { useState, useEffect } from "react";
-import { getJobs, deleteJob } from "../services/api"; 
-import { useNavigate } from "react-router-dom";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Button from "@mui/material/Button";
+//
 
-const JobList = () => {
-  const [jobs, setJobs] = useState([]);
-  const [errorMessage, setErrorMessage] = useState("");
+import {
+  Box,
+  Typography,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Button,
+} from "@mui/material";
+import { useState, useEffect } from "react";
+import { getJobs, deleteJob } from "../services/api";
+import { useNavigate } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa";
+
+const JobListing = () => {
+  const [jobList, setJobList] = useState([]);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  console.log(jobs,"jobs")
-
   useEffect(() => {
-    async function fetchJobs() {
+    async function fetchJobListings() {
       try {
         const token = localStorage.getItem("token");
         const response = await getJobs(token);
-        setJobs(response.data);
-      } catch (error) {
-        setErrorMessage(error.response?.data?.message || "Error fetching jobs");
+        setJobList(response.data);
+      } catch (err) {
+        setError(err.response?.data?.message || "Error fetching jobs.");
       }
     }
 
-    fetchJobs();
+    fetchJobListings();
   }, []);
 
-  const handleDelete = async (id) => {
+  const handleJobDeletion = async (id) => {
     try {
       await deleteJob(id);
-      setJobs(jobs.filter((job) => job._id !== id)); 
-    } catch (error) {
-      setErrorMessage(error.response?.data?.message || "Failed to delete job");
+      setJobList(jobList.filter((job) => job._id !== id));
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to delete job.");
     }
   };
 
@@ -48,12 +51,31 @@ const JobList = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh",
-        flexDirection:"column",
-        gap:"20px"
+        flexDirection: "column",
+        gap: "20px",
+        minHeight: "100vh",
       }}
     >
-      <Button onClick={() => navigate("/create-job")} variant="contained" color="success" style={{borderRadius:"20px"}}>Create New Job</Button>
+      <Box sx={{
+        display:"flex",
+        gap:"20px",
+        alignItems:"center"
+      }}>
+      <FaArrowLeft style={{ cursor: "pointer" }} onClick={() => navigate("/")} />
+      <Button
+        onClick={() => navigate("/create-job")}
+        variant="contained"
+        sx={{
+          borderRadius: "20px",
+          backgroundColor: "#3498db", // Light Blue
+          "&:hover": {
+            backgroundColor: "#2980b9", // Darker Blue
+          },
+        }}
+      >
+        Add New Job
+      </Button>
+      </Box>
       <Paper
         elevation={3}
         sx={{
@@ -64,12 +86,16 @@ const JobList = () => {
         }}
       >
         <Typography variant="h5" gutterBottom>
-          Job Listings
+          Available Job Listings
         </Typography>
 
-        {errorMessage && (
-          <Typography variant="body2" color="error" sx={{ marginBottom: "16px" }}>
-            {errorMessage}
+        {error && (
+          <Typography
+            variant="body2"
+            color="error"
+            sx={{ marginBottom: "16px" }}
+          >
+            {error}
           </Typography>
         )}
 
@@ -77,14 +103,14 @@ const JobList = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Title</TableCell>
+                <TableCell>Job Title</TableCell>
                 <TableCell>Company</TableCell>
                 <TableCell>Location</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {jobs && jobs.map((job) => (
+              {jobList.map((job) => (
                 <TableRow key={job._id}>
                   <TableCell>{job.title}</TableCell>
                   <TableCell>{job.company}</TableCell>
@@ -92,17 +118,28 @@ const JobList = () => {
                   <TableCell>
                     <Button
                       variant="contained"
-                      color="warning"
                       onClick={() => navigate(`/edit-job/${job._id}`)}
-                      sx={{ marginRight: "8px",borderRadius:"20px"} }
+                      sx={{
+                        marginRight: "8px",
+                        borderRadius: "20px",
+                        backgroundColor: "#f39c12", // Light Orange
+                        "&:hover": {
+                          backgroundColor: "#e67e22", // Darker Orange
+                        },
+                      }}
                     >
                       Edit
                     </Button>
                     <Button
                       variant="contained"
-                      color="error"
-                      onClick={() => handleDelete(job._id)}
-                      style={{borderRadius:"20px"}}
+                      onClick={() => handleJobDeletion(job._id)}
+                      sx={{
+                        borderRadius: "20px",
+                        backgroundColor: "#e74c3c", // Light Red
+                        "&:hover": {
+                          backgroundColor: "#c0392b", // Darker Red
+                        },
+                      }}
                     >
                       Delete
                     </Button>
@@ -117,4 +154,4 @@ const JobList = () => {
   );
 };
 
-export default JobList;
+export default JobListing;

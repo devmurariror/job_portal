@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { getJob, createJob, editJob } from "../services/api";
+// 
+
 import {
   TextField,
   Button,
@@ -11,8 +10,12 @@ import {
   MenuItem,
   Box,
 } from "@mui/material";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { getJob, createJob, editJob } from "../services/api";
+import { FaArrowLeft } from "react-icons/fa";
 
-const categories = [
+const jobCategories = [
   "Sales & Marketing",
   "Creative",
   "Human Resource",
@@ -24,76 +27,80 @@ const categories = [
 
 const JobForm = ({ isEdit }) => {
   const { id } = useParams();
-  const [job, setJob] = useState({
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
     title: "",
     description: "",
     company: "",
     location: "",
     category: "",
   });
-  const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate();
+
+  const [formError, setFormError] = useState("");
 
   useEffect(() => {
     if (isEdit && id) {
-      async function fetchJob() {
+      async function loadJobDetails() {
         try {
-          const response = await getJob(id);
-          setJob(response);
-        } catch (error) {
-          setErrorMessage(
-            error.response?.data?.message || "Error fetching job details"
-          );
+          const res = await getJob(id);
+          setFormData(res);
+        } catch (err) {
+          setFormError(err.response?.data?.message || "Failed to fetch job info.");
         }
       }
-      fetchJob();
+      loadJobDetails();
     }
   }, [isEdit, id]);
 
-  const handleSubmit = async (e) => {
+  const handleChange = (field) => (e) => {
+    setFormData({ ...formData, [field]: e.target.value });
+  };
+
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
       if (isEdit) {
-        await editJob(id, job);
+        await editJob(id, formData);
       } else {
-        await createJob(job);
+        await createJob(formData);
       }
       navigate("/jobs");
-    } catch (error) {
-      setErrorMessage(error.response?.data?.message || "Error occurred");
+    } catch (err) {
+      setFormError(err.response?.data?.message || "An unexpected error occurred.");
     }
   };
 
   return (
     <Box sx={{ maxWidth: 600, mx: "auto", mt: 5 }}>
-      {errorMessage && (
+      {formError && (
         <Typography variant="body1" color="error" sx={{ mb: 2 }}>
-          {errorMessage}
+          {formError}
         </Typography>
       )}
-
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <FaArrowLeft style={{ cursor: "pointer" }} onClick={() => navigate(-1)} />
+      <form onSubmit={handleFormSubmit} style={{ display: "flex", flexDirection: "column", gap: 16, marginTop:"10px" }}>
         <TextField
           label="Job Title"
           variant="outlined"
-          value={job.title}
-          onChange={(e) => setJob({ ...job, title: e.target.value })}
+          value={formData.title}
+          onChange={handleChange("title")}
           required
           fullWidth
         />
         <TextField
           label="Company"
           variant="outlined"
-          value={job.company}
-          onChange={(e) => setJob({ ...job, company: e.target.value })}
+          value={formData.company}
+          onChange={handleChange("company")}
           required
           fullWidth
         />
         <TextField
           label="Location"
           variant="outlined"
-          value={job.location}
-          onChange={(e) => setJob({ ...job, location: e.target.value })}
+          value={formData.location}
+          onChange={handleChange("location")}
           required
           fullWidth
         />
@@ -101,11 +108,11 @@ const JobForm = ({ isEdit }) => {
         <FormControl fullWidth required>
           <InputLabel>Category</InputLabel>
           <Select
-            value={job.category}
-            onChange={(e) => setJob({ ...job, category: e.target.value })}
+            value={formData.category}
+            onChange={handleChange("category")}
             label="Category"
           >
-            {categories.map((cat) => (
+            {jobCategories.map((cat) => (
               <MenuItem key={cat} value={cat}>
                 {cat}
               </MenuItem>
@@ -118,13 +125,24 @@ const JobForm = ({ isEdit }) => {
           variant="outlined"
           multiline
           rows={4}
-          value={job.description}
-          onChange={(e) => setJob({ ...job, description: e.target.value })}
+          value={formData.description}
+          onChange={handleChange("description")}
           fullWidth
         />
 
-        <Button type="submit" variant="contained" color="secondary" fullWidth style={{borderRadius:"20px"}}>
-          {isEdit ? "Edit Job" : "Create Job"}
+        <Button
+          type="submit"
+          variant="contained"
+          fullWidth
+          sx={{
+            borderRadius: "20px",
+            backgroundColor: "#3498DB", // custom green shade
+            "&:hover": {
+              backgroundColor: "#3498DB",
+            },
+          }}
+        >
+          {isEdit ? "Update Job" : "Post Job"}
         </Button>
       </form>
     </Box>

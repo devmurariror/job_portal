@@ -107,15 +107,32 @@ const Login = () => {
           <Button
             type="submit"
             variant="contained"
-            color="secondary"
+            
+            sx={{
+              backgroundColor: "#1e90ff",
+              "&:hover": {
+                backgroundColor: "#4682b4",
+              },
+              borderRadius: "20px",
+              // flex: 1,
+            }}
             fullWidth
+
+            
           >
             Login
           </Button>
           <Button
             type="submit"
             variant="outlined"
-            color="secondary"
+            sx={{
+              borderColor: "#1e90ff",
+              "&:hover": {
+                borderColor: "#4682b4",
+              },
+              borderRadius: "20px",
+              // flex: 1,
+            }}
             fullWidth
           >
             <Link to="/register">Register now</Link>

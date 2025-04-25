@@ -141,7 +141,7 @@ const Register = () => {
               {errorMessage}
             </Typography>
           )}
-          <Button type="submit" variant="contained" color="secondary" fullWidth style={{borderRadius:'20px'}}>
+          <Button type="submit" variant="contained" color="secondary" fullWidth style={{borderRadius:'20px',backgroundColor:"#3498DB"}}>
             Register
           </Button>
         </form>

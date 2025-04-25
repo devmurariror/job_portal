@@ -9,7 +9,7 @@ This is a full-stack Jobs Portal application built using the following technolog
 - **Routing**: React Router v6 for handling client-side routing
 - **Deployment**: Vercel and Render
 
-The application allows users to view job listings, post new jobs, edit or delete existing jobs, and handle user authentication (login and registration). 
+The application allows users to view job listings, post new jobs, edit or delete existing jobs, and handle user authentication (login and registration).
 
 ## Features
 
@@ -17,12 +17,12 @@ The application allows users to view job listings, post new jobs, edit or delete
 - JWT-based authentication with login and registration pages
 - React Router for navigation and private routing
 - MUI for component styling and Tailwind CSS for additional layout and responsiveness
-- Deployed on Vercel (Frontend) and Render (Backend)
+- Deployed on Render (Frontend) and (Backend)
 
-## Deployment Links
+## Deployment LinksRender
 
-- **Frontend (Vercel)**: [Jobs Portal Frontend](https://jobs-portal-app.vercel.app)
-- **Backend (Render)**: [Jobs Portal Backend](https://jportal-52n8.onrender.com)
+- **Frontend (Render)**: [Jobs Portal Frontend](https://job-portal-frontend-ks2f.onrender.com)
+- **Backend (Render)**: [Jobs Portal Backend](https://job-portal-f41k.onrender.com)
 
 ## Technologies Used
 
