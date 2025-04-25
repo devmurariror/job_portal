@@ -9,7 +9,7 @@ This is a full-stack Jobs Portal application built using the following technolog
 - **Routing**: React Router v6 for handling client-side routing
 - **Deployment**: Vercel and Render
 
-The application allows users to view job listings, post new jobs, edit or delete existing jobs, and handle user authentication (login and registration).
+The application allows users to view job listings, post new jobs, edit or delete existing jobs, and handle user authentication (login and registration). 
 
 ## Features
 
